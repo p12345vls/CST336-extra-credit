@@ -11,40 +11,12 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
         <link rel="stylesheet" href="main.css" type="text/css" />
 
-
-        
-        <style>
-.loader {
-  border: 16px solid #f3f3f3;
-  border-radius: 50%;
-  border-top: 16px solid blue;
-  border-right: 16px solid green;
-  border-bottom: 16px solid red;
-  width: 120px;
-  height: 120px;
-  -webkit-animation: spin 2s linear infinite;
-  animation: spin 2s linear infinite;
-}
-
-@-webkit-keyframes spin {
-  0% { -webkit-transform: rotate(0deg); }
-  100% { -webkit-transform: rotate(360deg); }
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.loader{
-  position: absolute;
-    top: 50%;
-    left: 50%;
-    margin-top: -50px;
-    margin-left: -50px;
-    width: 100px;
-    height: 100px;
-}
+<style>
+    thead th{
+        background-color:lightgrey;
+        color:white;
+        font-size:25px;
+    }
 </style>
     </head>
 
@@ -56,33 +28,41 @@
                 <div id="idselected"></div>
             </div>
 
-            <div class="container">
-                Show<select>
+                <div>
+
+                Show <span><select>
 
                     <option value="0">select</option>
                     <option value="10">10</option>
                     <option value="100">100</option>
                     <option value="300">300</option>
                     <option value="All">All</option>
-                </select>Entries
+                </select></span> Entries
+                
+                </div>
                 <hr>
                 <div id="container"></div><!-- here starts the table-->
 
-
                 <script>
+                 
                     var entries = 0;
-                    
-                            
-                            
+
                      $(function () {
+                        
                         $('select').on('change', function () {
                             entries = this.value;
-                             $('<div />')
-                            .attr('class', "loader")        // ADD IMAGE PROPERTIES.
-                            .appendTo($('#container'));
-                           
                             
+                            if(entries!=="0"){
+                               $('select').remove();
+                            }
+                            
+                            $("span").text(entries);
+                             $('<div />')
+                            .attr('class', "loader")      
+                            .appendTo($('#container'));
+
                             display(entries);
+                            
                              });
                         });
  
@@ -96,11 +76,22 @@
                         obj = JSON.parse(result);
                         //  console.log(obj);Object.keys(obj.amiibo).length
                         tbl = $('<table></table>').attr({class: 'table'});
+                        thead = $('<thead/>').appendTo(tbl);
+                        var tr = $('<tr></tr>').attr({class:
+                                        ["class1", "class2", "class3", "class4", "class5"]
+                                        .join(' ')}).appendTo(tbl);
+                         $('<th></th>').text("amiiboSeries").appendTo(tr);
+                         $('<th></th>').text("character").appendTo(tr);
+                         $('<th></th>').text("gameSeries").appendTo(tr);
+                         $('<th></th>').text("image").appendTo(tr);
+                        tr.appendTo(thead);
+                     
 
                         if(entries=="All"){
                             entries=Object.keys(obj.amiibo).length;
                         }
-                        $("#container div:last-child").remove();
+                        $("#container div:last-child").remove();//remove the loading
+                        
                         for (var i = 0; i < entries; i++) {
                             var $name = obj.amiibo[i]['name'];
                             var $img = obj.amiibo[i]['image'];
@@ -117,7 +108,7 @@
                             var row = $('<tr></tr>').attr({class:
                                         ["class1", "class2", "class3", "class4", "class5"]
                                         .join(' ')}).appendTo(tbl);
-                            $('<td></td>').text($series).appendTo(row);
+                           
                             $('<td></td>').text($character).appendTo(row);
                             $('<td></td>').text($gameSeries).appendTo(row);
                             $('<td></td>').text($name).appendTo(row);
